@@ -4,7 +4,7 @@ from building import *
 
 cwd = GetCurrentDir()
 src = Glob('*.c')
-# src += Glob('devices/OLED_zjy/*.c')
+# src += Glob('devices/OLED/*.c')
 # src += Glob('samples/led_sample.c')
 # src += Glob('samples/oled_sample.c')
 # src += Glob('samples/uart_sample.c')
