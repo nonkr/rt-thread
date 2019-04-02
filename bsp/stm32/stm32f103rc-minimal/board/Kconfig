@@ -68,6 +68,21 @@ menu "On-chip Peripheral Drivers"
                 depends on BSP_USING_SPI1
                 select BSP_SPI1_TX_USING_DMA
                 default n
+
+            config BSP_USING_SPI2
+                bool "Enable SPI2 BUS"
+                default n
+
+            config BSP_SPI2_TX_USING_DMA
+                bool "Enable SPI2 TX DMA"
+                depends on BSP_USING_SPI2
+                default n
+                
+            config BSP_SPI2_RX_USING_DMA
+                bool "Enable SPI2 RX DMA"
+                depends on BSP_USING_SPI2
+                select BSP_SPI2_TX_USING_DMA
+                default n
         endif
 
     menuconfig BSP_USING_I2C1
@@ -85,6 +100,46 @@ menu "On-chip Peripheral Drivers"
                 int "I2C1 sda pin number"
                 range 1 216
                 default 16
+        endif
+
+    menuconfig BSP_USING_PWM1
+        bool "Using PWM1"
+        select RT_USING_PWM
+        default n
+
+        if BSP_USING_PWM1
+            config BSP_USING_PWM1_CH1
+                bool "Enable Channel 1 (PA8)"
+                default n
+            config BSP_USING_PWM1_CH2
+                bool "Enable Channel 2 (PA9)"
+                default n
+            config BSP_USING_PWM1_CH3
+                bool "Enable Channel 3 (PA10)"
+                default n
+            config BSP_USING_PWM1_CH4
+                bool "Enable Channel 4 (PA11)"
+                default n
+        endif
+
+    menuconfig BSP_USING_PWM2
+        bool "Using PWM2"
+        select RT_USING_PWM
+        default n
+
+        if BSP_USING_PWM2
+            config BSP_USING_PWM2_CH1
+                bool "Enable Channel 1 (PA5)"
+                default n
+            config BSP_USING_PWM2_CH2
+                bool "Enable Channel 2 (PB3)"
+                default n
+            config BSP_USING_PWM2_CH3
+                bool "Enable Channel 3 (PB10)"
+                default n
+            config BSP_USING_PWM2_CH4
+                bool "Enable Channel 4 (PA3)"
+                default n
         endif
 
 endmenu

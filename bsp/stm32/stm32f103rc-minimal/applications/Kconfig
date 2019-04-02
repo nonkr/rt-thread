@@ -1,0 +1,16 @@
+menu "User Applications Config"
+
+menu "Application Samples"
+
+    menuconfig APP_USING_SAMPLES
+        config APP_USING_PWM_LED
+            bool "Enable PWM LED sample"
+            default n
+
+        config APP_USING_LED
+            bool "Enable LED sample"
+            default n
+
+endmenu
+
+endmenu

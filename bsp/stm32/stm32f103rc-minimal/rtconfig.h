@@ -7,6 +7,7 @@
 /* RT-Thread Kernel */
 
 #define RT_NAME_MAX 8
+/* RT_USING_ARCH_DATA_TYPE is not set */
 /* RT_USING_SMP is not set */
 #define RT_ALIGN_SIZE 4
 /* RT_THREAD_PRIORITY_8 is not set */
@@ -32,7 +33,7 @@
 
 /* Memory Management */
 
-/* RT_USING_MEMPOOL is not set */
+#define RT_USING_MEMPOOL
 /* RT_USING_MEMHEAP is not set */
 /* RT_USING_NOHEAP is not set */
 #define RT_USING_SMALL_MEM
@@ -126,7 +127,7 @@
 /* RT_USING_I2C is not set */
 #define RT_USING_PIN
 /* RT_USING_ADC is not set */
-/* RT_USING_PWM is not set */
+#define RT_USING_PWM
 /* RT_USING_MTD_NOR is not set */
 /* RT_USING_MTD_NAND is not set */
 /* RT_USING_MTD is not set */
@@ -135,12 +136,8 @@
 /* RT_USING_SDIO is not set */
 #define RT_USING_SPI
 /* RT_USING_QSPI is not set */
-/* RT_USING_SPI_MSD is not set */
-#define RT_USING_SFUD
-#define RT_SFUD_USING_SFDP
-#define RT_SFUD_USING_FLASH_INFO_TABLE
-/* RT_SFUD_USING_QSPI is not set */
-/* RT_DEBUG_SFUD is not set */
+#define RT_USING_SPI_MSD
+/* RT_USING_SFUD is not set */
 /* RT_USING_W25QXX is not set */
 /* RT_USING_GD is not set */
 /* RT_USING_ENC28J60 is not set */
@@ -196,11 +193,6 @@
 /* RT_USING_RYM is not set */
 /* RT_USING_ULOG is not set */
 /* RT_USING_UTEST is not set */
-
-/* ARM CMSIS */
-
-/* RT_USING_CMSIS_OS is not set */
-/* RT_USING_RTT_CMSIS is not set */
 /* RT_USING_LWP is not set */
 
 /* RT-Thread online packages */
@@ -214,6 +206,7 @@
 /* PKG_USING_WEBTERMINAL is not set */
 /* PKG_USING_CJSON is not set */
 /* PKG_USING_JSMN is not set */
+/* PKG_USING_LIBMODBUS is not set */
 /* PKG_USING_LJSON is not set */
 /* PKG_USING_EZXML is not set */
 /* PKG_USING_NANOPB is not set */
@@ -227,6 +220,7 @@
 /* Wiced WiFi */
 
 /* PKG_USING_WLAN_WICED is not set */
+/* PKG_USING_RW007 is not set */
 /* PKG_USING_COAP is not set */
 /* PKG_USING_NOPOLL is not set */
 /* PKG_USING_NETUTILS is not set */
@@ -240,6 +234,8 @@
 /* PKG_USING_ALI_IOTKIT is not set */
 /* PKG_USING_AZURE is not set */
 /* PKG_USING_TENCENT_IOTKIT is not set */
+/* PKG_USING_NIMBLE is not set */
+/* PKG_USING_OTA_DOWNLOADER is not set */
 
 /* security packages */
 
@@ -257,6 +253,7 @@
 
 /* PKG_USING_OPENMV is not set */
 /* PKG_USING_MUPDF is not set */
+/* PKG_USING_STEMWIN is not set */
 
 /* tools packages */
 
@@ -267,6 +264,7 @@
 /* PKG_USING_RDB is not set */
 /* PKG_USING_QRCODE is not set */
 /* PKG_USING_ULOG_EASYFLASH is not set */
+/* PKG_USING_ADBD is not set */
 
 /* system packages */
 
@@ -285,6 +283,7 @@
 
 /* peripheral libraries and drivers */
 
+/* PKG_USING_SENSORS_DRIVERS is not set */
 /* PKG_USING_REALTEK_AMEBA is not set */
 /* PKG_USING_SHT2X is not set */
 /* PKG_USING_AHT10 is not set */
@@ -295,6 +294,8 @@
 /* PKG_USING_BUTTON is not set */
 /* PKG_USING_MPU6XXX is not set */
 /* PKG_USING_PCF8574 is not set */
+/* PKG_USING_SX12XX is not set */
+/* PKG_USING_SIGNAL_LED is not set */
 /* PKG_USING_KENDRYTE_SDK is not set */
 
 /* miscellaneous packages */
@@ -314,11 +315,21 @@
 /* samples: kernel and components samples */
 
 /* PKG_USING_KERNEL_SAMPLES is not set */
-/* PKG_USING_FILESYSTEM_SAMPLES is not set */
+#define PKG_USING_FILESYSTEM_SAMPLES
+#define PKG_USING_FILESYSTEM_SAMPLES_V020
+/* PKG_USING_FILESYSTEM_SAMPLES_LATEST_VERSION is not set */
+/* FILESYSTEM_SAMPLES_USING_READWRITE is not set */
+/* FILESYSTEM_SAMPLES_USING_STAT is not set */
+/* FILESYSTEM_SAMPLES_USING_RENAME is not set */
+#define FILESYSTEM_SAMPLES_USING_MKDIR
+/* FILESYSTEM_SAMPLES_USING_OPENDIR is not set */
+/* FILESYSTEM_SAMPLES_USING_READDIR is not set */
+/* FILESYSTEM_SAMPLES_USING_TELL_SEEK_DIR is not set */
 /* PKG_USING_NETWORK_SAMPLES is not set */
 /* PKG_USING_PERIPHERAL_SAMPLES is not set */
 /* PKG_USING_HELLO is not set */
 /* PKG_USING_VI is not set */
+/* PKG_USING_NNOM is not set */
 #define SOC_FAMILY_STM32
 #define SOC_SERIES_STM32F1
 
@@ -336,10 +347,28 @@
 #define BSP_UART1_RX_USING_DMA
 /* BSP_USING_UART2 is not set */
 /* BSP_USING_UART3 is not set */
-/* BSP_USING_SPI is not set */
+#define BSP_USING_SPI
+#define BSP_USING_SPI1
+#define BSP_SPI1_TX_USING_DMA
+#define BSP_SPI1_RX_USING_DMA
+#define BSP_USING_SPI2
+/* BSP_SPI2_TX_USING_DMA is not set */
+/* BSP_SPI2_RX_USING_DMA is not set */
 /* BSP_USING_I2C1 is not set */
+#define BSP_USING_PWM1
+/* BSP_USING_PWM1_CH1 is not set */
+/* BSP_USING_PWM1_CH2 is not set */
+/* BSP_USING_PWM1_CH3 is not set */
+/* BSP_USING_PWM1_CH4 is not set */
+/* BSP_USING_PWM2 is not set */
 
 /* Board extended module Drivers */
 
+/* User Applications Config */
+
+/* Application Samples */
+
+#define APP_USING_PWM_LED
+/* APP_USING_LED is not set */
 
 #endif

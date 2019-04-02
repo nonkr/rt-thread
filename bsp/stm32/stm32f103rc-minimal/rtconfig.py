@@ -28,8 +28,8 @@ elif CROSS_TOOL == 'iar':
 if os.getenv('RTT_EXEC_PATH'):
     EXEC_PATH = os.getenv('RTT_EXEC_PATH')
 
-# BUILD = 'debug'
-BUILD = ''
+BUILD = 'debug'
+# BUILD = ''
 
 if PLATFORM == 'gcc':
     # toolchains
@@ -62,6 +62,7 @@ if PLATFORM == 'gcc':
     CFLAGS += ' -std=c99'
 
     POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n'
+    POST_ACTION += OBJCPY + ' -O ihex $TARGET rtthread.hex\n' + SIZE + ' $TARGET \n'
 
 elif PLATFORM == 'armcc':
     # toolchains

@@ -23,23 +23,23 @@
 #define XLevelH        0x10
 #define Max_Column    128
 #define Max_Row        64
-#define    Brightness    0xFF
+#define Brightness    0xFF
 #define X_WIDTH    128
 #define Y_WIDTH    64
 
 
-#define OLED_D0_PIN  GET_PIN(A,  0)   // D0(CLK)
-#define OLED_D1_PIN  GET_PIN(A,  1)   // D1(DIN)
-#define OLED_RES_PIN GET_PIN(A,  2)   // RES
-#define OLED_DC_PIN  GET_PIN(A,  3)   // DC
-#define OLED_CS_PIN  GET_PIN(A,  4)   // CS
+#define OLED_CLK_PIN  GET_PIN(B,  13)   // D0(SCL/CLK)
+#define OLED_DIN_PIN  GET_PIN(B,  15)   // D1(SDI/DIN)
+#define OLED_RES_PIN GET_PIN(B,  14)   // RES
+#define OLED_DC_PIN  GET_PIN(C,  6)    // DC
+#define OLED_CS_PIN  GET_PIN(B,  12)   // CS
 
 
-#define OLED_SCLK_Clr() rt_pin_write(OLED_D0_PIN, PIN_LOW)//CLK
-#define OLED_SCLK_Set() rt_pin_write(OLED_D0_PIN, PIN_HIGH)
+#define OLED_SCLK_Clr() rt_pin_write(OLED_CLK_PIN, PIN_LOW)//CLK
+#define OLED_SCLK_Set() rt_pin_write(OLED_CLK_PIN, PIN_HIGH)
 
-#define OLED_SDIN_Clr() rt_pin_write(OLED_D1_PIN, PIN_LOW)//DIN
-#define OLED_SDIN_Set() rt_pin_write(OLED_D1_PIN, PIN_HIGH)
+#define OLED_SDIN_Clr() rt_pin_write(OLED_DIN_PIN, PIN_LOW)//DIN
+#define OLED_SDIN_Set() rt_pin_write(OLED_DIN_PIN, PIN_HIGH)
 
 #define OLED_RST_Clr() rt_pin_write(OLED_RES_PIN, PIN_LOW)//RES
 #define OLED_RST_Set() rt_pin_write(OLED_RES_PIN, PIN_HIGH)

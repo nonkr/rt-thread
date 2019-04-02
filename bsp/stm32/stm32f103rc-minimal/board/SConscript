@@ -12,6 +12,8 @@ board.c
 CubeMX_Config/Src/stm32f1xx_hal_msp.c
 ''')
 
+src += Glob('ports/sdcard_port.c')
+
 path =  [cwd]
 path += [cwd + '/CubeMX_Config/Inc']
 

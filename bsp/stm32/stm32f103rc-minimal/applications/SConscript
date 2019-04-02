@@ -4,9 +4,15 @@ from building import *
 
 cwd = GetCurrentDir()
 src = Glob('*.c')
-src += Glob('devices/OLED_zjy/*.c')
-# src += Glob('samples/led_sample.c')
-# src += Glob('samples/oled_sample.c')
+# src += Glob('devices/OLED/*.c')
+# src += Glob('samples/oled.c')
+
+if GetDepend(['APP_USING_LED']):
+    src += Glob('samples/led.c')
+
+if GetDepend(['APP_USING_PWM_LED']):
+    src += Glob('samples/pwm_led.c')
+
 # src += Glob('samples/uart_sample.c')
 CPPPATH = [cwd, str(Dir('#'))]
 

@@ -9,11 +9,11 @@
  *
  */
 
-#include "devices/OLED_zjy/oled_zjy.h"
-#include "devices/OLED_zjy/bmp.h"
+#include "devices/OLED/oled.h"
+#include "devices/OLED/bmp.h"
 
 #define THREAD_PRIORITY         25
-#define THREAD_STACK_SIZE       256
+#define THREAD_STACK_SIZE       512
 #define THREAD_TIMESLICE        5
 
 static void oled_entry(void *parameter)
@@ -33,8 +33,6 @@ static void oled_entry(void *parameter)
         OLED_ShowCHinese(90, 0, 5); //科
         OLED_ShowCHinese(108, 0, 6);//技
         OLED_ShowString(0, 3, (rt_uint8_t *) "1.3' OLED TEST");
-        //OLED_ShowString(8,2,"ZHONGJINGYUAN");
-        //	OLED_ShowString(20,4,"2014/05/01");
         OLED_ShowString(0, 6, (rt_uint8_t *) "ASCII:");
         OLED_ShowString(63, 6, (rt_uint8_t *) "CODE:");
         OLED_ShowChar(48, 6, t);//显示ASCII字符
@@ -53,7 +51,7 @@ static void oled_entry(void *parameter)
     }
 }
 
-void oled_sample(void)
+int oled_sample(void)
 {
     rt_thread_t tid = NULL;
 
@@ -65,6 +63,8 @@ void oled_sample(void)
     /* 如果获得线程控制块，启动这个线程 */
     if (tid != RT_NULL)
         rt_thread_startup(tid);
+
+    return 0;
 }
 
 MSH_CMD_EXPORT(oled_sample, "oled sample")

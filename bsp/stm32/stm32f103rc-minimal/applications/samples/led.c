@@ -12,10 +12,10 @@
 #include <rtthread.h>
 #include <board.h>
 
-#define LED0_PIN    GET_PIN(C, 13)
+#define LED0_PIN    GET_PIN(A, 8)
 
 #define THREAD_PRIORITY         25
-#define THREAD_STACK_SIZE       160
+#define THREAD_STACK_SIZE       256
 #define THREAD_TIMESLICE        5
 
 static void led_entry(void *parameter)
