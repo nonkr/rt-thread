@@ -100,7 +100,7 @@ config IDLE_THREAD_STACK_SIZE
 
 config RT_USING_TIMER_SOFT
     bool "Enable software timer with a timer thread"
-    default n
+    default y
     help
         the timeout function context of soft-timer is under a high priority timer
         thread.
@@ -124,7 +124,7 @@ if RT_DEBUG
 
 config RT_DEBUG_COLOR
     bool "Enable color debugging log"
-    default y
+    default n
 
 config RT_DEBUG_INIT_CONFIG
     bool "Enable debugging of components initialization"
@@ -331,7 +331,7 @@ endmenu
 
 config RT_VER_NUM
     hex
-    default 0x40001
+    default 0x40002
     help
         RT-Thread version number
 

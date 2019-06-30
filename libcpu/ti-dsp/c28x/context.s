@@ -73,7 +73,9 @@ RT_CTX_RESTORE  .macro
 ;
     .asmfunc
 _rt_hw_interrupt_disable:
-    DINT
+    PUSH  ST1
+    SETC  INTM,DBGM
+    MOV   AL, *--SP
     LRETR
     .endasmfunc
 
@@ -82,7 +84,8 @@ _rt_hw_interrupt_disable:
 ;
     .asmfunc
 _rt_hw_interrupt_enable:
-    EINT
+    MOV   *SP++, AL
+    POP   ST1
     LRETR
     .endasmfunc
     
@@ -94,11 +97,10 @@ _rt_hw_interrupt_enable:
  
     .asmfunc
 _rt_hw_context_switch_interrupt:
-_rt_hw_context_switch:
     MOVL    XAR0, #0
     MOV     AR0, AL
     MOVL    XAR4, *-SP[4]
-    ; set rt_thread_switch_interrupt_flag to 1 
+    ; set rt_thread_switch_interrupt_flag to 1
     MOVL    XAR5, #_rt_thread_switch_interrupt_flag
     MOVL    XAR6, *XAR5
     MOVL    ACC, XAR6
@@ -111,6 +113,36 @@ _rt_hw_context_switch:
     MOVL    *XAR5, XAR0
 
 _reswitch:
+    MOVL    XAR5, #_rt_interrupt_to_thread     ; set rt_interrupt_to_thread
+    MOVL    *XAR5, XAR4
+
+    LRETR
+    .endasmfunc
+
+;
+; void rt_hw_context_switch(rt_uint32 from, rt_uint32 to);
+; r0 --> from
+; r4 --> to
+
+
+    .asmfunc
+_rt_hw_context_switch:
+    MOVL    XAR0, #0
+    MOV     AR0, AL
+    MOVL    XAR4, *-SP[4]
+    ; set rt_thread_switch_interrupt_flag to 1 
+    MOVL    XAR5, #_rt_thread_switch_interrupt_flag
+    MOVL    XAR6, *XAR5
+    MOVL    ACC, XAR6
+    CMPB    AL, #1
+    B       _reswitch2, EQ
+    MOVL     XAR6, #1
+    MOVL    *XAR5, XAR6
+
+    MOVL    XAR5, #_rt_interrupt_from_thread   ; set rt_interrupt_from_thread
+    MOVL    *XAR5, XAR0
+
+_reswitch2:
     MOVL    XAR5, #_rt_interrupt_to_thread     ; set rt_interrupt_to_thread
     MOVL    *XAR5, XAR4
 
@@ -139,8 +171,6 @@ _RTOSINT_Handler:
     MOV     AR1, AL
     CMP     AR1, #0
     B       switch_to_thread, EQ    ; skip register save at the first time 
-
-    ;MOVZ    AR1, @SP                 ; get from thread stack pointer 
     
 ;#if defined (__VFP_FP__) && !defined(__SOFTFP__)
 ;    TST     lr, #0x10           ; if(!EXC_RETURN[4]) 
@@ -159,9 +189,9 @@ _RTOSINT_Handler:
 ;#endif
 
     MOV     AL, *AR0
-    MOV     AR1, AL
+    MOV     AR0, AL
     MOVZ    AR1, @SP                 ; get from thread stack pointer
-    MOV     *AR0, AR1                ; update from thread stack pointer 
+    MOV     *AR0, AR1                ; update from thread stack pointer
 
 switch_to_thread:
     MOV     AR1, #_rt_interrupt_to_thread
@@ -175,7 +205,7 @@ switch_to_thread:
 ;#endif
 
     MOV     @SP, AR1
-    INC     SP
+
     RT_CTX_RESTORE     ; pop r4 - r11 register
 
 rtosint_exit:
