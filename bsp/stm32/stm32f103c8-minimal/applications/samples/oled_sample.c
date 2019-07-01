@@ -9,7 +9,7 @@
  *
  */
 
-#include "devices/OLED_zjy/oled.h"
+#include "devices/OLED_zjy/oled_zjy.h"
 #include "devices/OLED_zjy/bmp.h"
 #include "oled_sample.h"
 

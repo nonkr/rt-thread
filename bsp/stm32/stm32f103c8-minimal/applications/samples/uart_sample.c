@@ -18,6 +18,7 @@
 */
 
 #include <rtthread.h>
+#include "uart_sample.h"
 
 #define SAMPLE_UART_NAME       "uart2"
 
@@ -52,20 +53,13 @@ static void serial_thread_entry(void *parameter)
     }
 }
 
-static int uart_sample(int argc, char *argv[])
+int uart_sample(void)
 {
     rt_err_t ret   = RT_EOK;
     char     uart_name[RT_NAME_MAX];
     char     str[] = "hello RT-Thread!\r\n";
 
-    if (argc == 2)
-    {
-        rt_strncpy(uart_name, argv[1], RT_NAME_MAX);
-    }
-    else
-    {
-        rt_strncpy(uart_name, SAMPLE_UART_NAME, RT_NAME_MAX);
-    }
+    rt_strncpy(uart_name, SAMPLE_UART_NAME, RT_NAME_MAX);
 
     /* 查找系统中的串口设备 */
     serial = rt_device_find(uart_name);
