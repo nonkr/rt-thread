@@ -372,7 +372,7 @@ const static char* _ustring[] =
     "Interface",
 };
 
-static void dump_data(uint8_t *data, rt_size_t size)
+static void dump_data(rt_uint8_t *data, rt_size_t size)
 {
     rt_size_t i;
     for (i = 0; i < size; i++)
@@ -457,9 +457,6 @@ static rt_err_t _interface_handler(ufunction_t func, ureq_t setup)
     RT_ASSERT(setup != RT_NULL);
 
     struct hid_s *data = (struct hid_s *) func->user_data;
-
-    if(setup->wIndex != 0)
-        return -RT_EIO;
 
     switch (setup->bRequest)
     {
