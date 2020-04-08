@@ -15,19 +15,15 @@
 #include "utest.h"
 #include <utest_log.h>
 
-#undef DBG_SECTION_NAME
-#undef DBG_LEVEL
-#undef DBG_COLOR
-#undef DBG_ENABLE
+#undef DBG_TAG
+#undef DBG_LVL
 
-#define DBG_ENABLE
-#define DBG_SECTION_NAME          "utest"
+#define DBG_TAG          "utest"
 #ifdef UTEST_DEBUG
-#define DBG_LEVEL                 DBG_LOG
+#define DBG_LVL          DBG_LOG
 #else
-#define DBG_LEVEL                 DBG_INFO
+#define DBG_LVL          DBG_INFO
 #endif
-#define DBG_COLOR
 #include <rtdbg.h>
 
 #if RT_CONSOLEBUF_SIZE < 256
@@ -67,20 +63,20 @@ void utest_log_lv_set(rt_uint8_t lv)
 int utest_init(void)
 {
     /* initialize the utest commands table.*/
-#if defined(__CC_ARM)                                 /* ARM C Compiler */
+#if defined(__CC_ARM) || defined(__CLANG_ARM)       /* ARM C Compiler */
     extern const int UtestTcTab$$Base;
     extern const int UtestTcTab$$Limit;
     tc_table = (utest_tc_export_t)&UtestTcTab$$Base;
     tc_num = (utest_tc_export_t)&UtestTcTab$$Limit - tc_table;
-#elif defined (__ICCARM__) || defined(__ICCRX__)      /* for IAR Compiler */
+#elif defined (__ICCARM__) || defined(__ICCRX__)    /* for IAR Compiler */
     tc_table = (utest_tc_export_t)__section_begin("UtestTcTab");
     tc_num = (utest_tc_export_t)__section_end("UtestTcTab") - tc_table;
-#elif defined (__GNUC__)                              /* for GCC Compiler */
+#elif defined (__GNUC__)                            /* for GCC Compiler */
     extern const int __rt_utest_tc_tab_start;
     extern const int __rt_utest_tc_tab_end;
     tc_table = (utest_tc_export_t)&__rt_utest_tc_tab_start;
     tc_num = (utest_tc_export_t) &__rt_utest_tc_tab_end - tc_table;
-#endif /* defined(__CC_ARM) */
+#endif
 
     LOG_I("utest is initialize success.");
     LOG_I("total utest testcase num: (%d)", tc_num);
@@ -158,6 +154,7 @@ static void utest_run(const char *utest_name)
     {
         i = 0;
         is_find = RT_FALSE;
+        LOG_I("[==========] [ utest    ] loop %d/%d", index + 1, tc_loop);
         LOG_I("[==========] [ utest    ] started");
         while(i < tc_num)
         {
@@ -218,7 +215,7 @@ static void utest_run(const char *utest_name)
             i++;
         }
 
-        if (i == tc_num && is_find == RT_FALSE)
+        if (i == tc_num && is_find == RT_FALSE && utest_name != RT_NULL)
         {
             LOG_I("[==========] [ utest    ] Not find (%s)", utest_name);
             LOG_I("[==========] [ utest    ] finished");

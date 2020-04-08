@@ -8,6 +8,14 @@ config RT_NAME_MAX
         Each kernel object, such as thread, timer, semaphore etc, has a name,
         the RT_NAME_MAX is the maximal size of this object name.
 
+config RT_USING_ARCH_DATA_TYPE
+    bool "Use the data types defined in ARCH_CPU"
+    default n
+    help
+        For the data type like, `rt_uint8/int8_t, rt_uint16/int16_t, rt_uint32/int32_t`,
+        BSP can define these basic data types in ARCH_CPU level.
+
+        Please re-define these data types in rtconfig_project.h file.
 config RT_ALIGN_SIZE
     int "Alignment size for CPU architecture data access"
     default 4
@@ -61,8 +69,8 @@ config RT_USING_IDLE_HOOK
     default y if RT_USING_HOOK
 
     if RT_USING_IDLE_HOOK
-    config RT_IDEL_HOOK_LIST_SIZE
-        int "The max size of idel hook list"
+    config RT_IDLE_HOOK_LIST_SIZE
+        int "The max size of idle hook list"
         default 4
         range 1 16
         help
@@ -75,7 +83,7 @@ config IDLE_THREAD_STACK_SIZE
 
 config RT_USING_TIMER_SOFT
     bool "Enable software timer with a timer thread"
-    default n
+    default y
     help
         the timeout function context of soft-timer is under a high priority timer
         thread.
@@ -96,6 +104,10 @@ menuconfig RT_DEBUG
     default y
 
 if RT_DEBUG
+
+config RT_DEBUG_COLOR
+    bool "Enable color debugging log"
+    default n
 
 config RT_DEBUG_INIT_CONFIG
     bool "Enable debugging of components initialization"
@@ -302,7 +314,7 @@ endmenu
 
 config RT_VER_NUM
     hex
-    default 0x30102
+    default 0x30104
     help
         RT-Thread version number
 

@@ -74,12 +74,16 @@ static void _rt_scheduler_stack_check(struct rt_thread *thread)
 {
     RT_ASSERT(thread != RT_NULL);
 
+#if defined(ARCH_CPU_STACK_GROWS_UPWARD)
+    if (*((rt_uint8_t *)((rt_ubase_t)thread->stack_addr + thread->stack_size - 1)) != '#' ||
+#else
     if (*((rt_uint8_t *)thread->stack_addr) != '#' ||
-        (rt_uint32_t)thread->sp <= (rt_uint32_t)thread->stack_addr ||
-        (rt_uint32_t)thread->sp >
-        (rt_uint32_t)thread->stack_addr + (rt_uint32_t)thread->stack_size)
+#endif
+        (rt_ubase_t)thread->sp <= (rt_ubase_t)thread->stack_addr ||
+        (rt_ubase_t)thread->sp >
+        (rt_ubase_t)thread->stack_addr + (rt_ubase_t)thread->stack_size)
     {
-        rt_uint32_t level;
+        rt_ubase_t level;
 
         rt_kprintf("thread:%s stack overflow\n", thread->name);
 #ifdef RT_USING_FINSH
@@ -92,15 +96,15 @@ static void _rt_scheduler_stack_check(struct rt_thread *thread)
         while (level);
     }
 #if defined(ARCH_CPU_STACK_GROWS_UPWARD)
-    else if ((rt_uint32_t)thread->sp > ((rt_uint32_t)thread->stack_addr + thread->stack_size))
+    else if ((rt_ubase_t)thread->sp > ((rt_ubase_t)thread->stack_addr + thread->stack_size))
     {
         rt_kprintf("warning: %s stack is close to the top of stack address.\n",
                    thread->name);
     }
 #else
-    else if ((rt_uint32_t)thread->sp <= ((rt_uint32_t)thread->stack_addr + 32))
+    else if ((rt_ubase_t)thread->sp <= ((rt_ubase_t)thread->stack_addr + 32))
     {
-        rt_kprintf("warning: %s stack is close to the bottom of stack address.\n",
+        rt_kprintf("warning: %s stack is close to end of stack address.\n",
                    thread->name);
     }
 #endif
@@ -234,26 +238,36 @@ void rt_schedule(void)
 
             if (rt_interrupt_nest == 0)
             {
-                extern void rt_thread_handle_sig(void);
-
-                rt_hw_context_switch((rt_uint32_t)&from_thread->sp,
-                                     (rt_uint32_t)&to_thread->sp);
-
-                /* enable interrupt */
-                rt_hw_interrupt_enable(level);
+                rt_hw_context_switch((rt_ubase_t)&from_thread->sp,
+                                     (rt_ubase_t)&to_thread->sp);
 
 #ifdef RT_USING_SIGNALS
-                /* handle signal */
-                rt_thread_handle_sig();
+                if (rt_current_thread->stat & RT_THREAD_STAT_SIGNAL_PENDING)
+                {
+                    extern void rt_thread_handle_sig(rt_bool_t clean_state);
+
+                    rt_current_thread->stat &= ~RT_THREAD_STAT_SIGNAL_PENDING;
+
+                    rt_hw_interrupt_enable(level);
+
+                    /* check signal status */
+                    rt_thread_handle_sig(RT_TRUE);
+                }
+                else
 #endif
+                {
+                    /* enable interrupt */
+                    rt_hw_interrupt_enable(level);
+                }
+
                 return ;
             }
             else
             {
                 RT_DEBUG_LOG(RT_DEBUG_SCHEDULER, ("switch in interrupt\n"));
 
-                rt_hw_context_switch_interrupt((rt_uint32_t)&from_thread->sp,
-                                               (rt_uint32_t)&to_thread->sp);
+                rt_hw_context_switch_interrupt((rt_ubase_t)&from_thread->sp,
+                                               (rt_ubase_t)&to_thread->sp);
             }
         }
     }
@@ -389,14 +403,17 @@ void rt_exit_critical(void)
     level = rt_hw_interrupt_disable();
 
     rt_scheduler_lock_nest --;
-
     if (rt_scheduler_lock_nest <= 0)
     {
         rt_scheduler_lock_nest = 0;
         /* enable interrupt */
         rt_hw_interrupt_enable(level);
 
-        rt_schedule();
+        if (rt_current_thread)
+        {
+            /* if scheduler is started, do a schedule */
+            rt_schedule();
+        }
     }
     else
     {
