@@ -1,0 +1,21 @@
+Import('RTT_ROOT')
+Import('rtconfig')
+from building import *
+
+cwd = GetCurrentDir()
+src = Glob('*.c')
+# src += Glob('devices/OLED/*.c')
+# src += Glob('samples/oled.c')
+
+if GetDepend(['APP_USING_LED']):
+    src += Glob('samples/led.c')
+
+if GetDepend(['APP_USING_PWM_LED']):
+    src += Glob('samples/pwm_led.c')
+
+# src += Glob('samples/uart_sample.c')
+CPPPATH = [cwd, str(Dir('#'))]
+
+group = DefineGroup('Applications', src, depend=[''], CPPPATH=CPPPATH)
+
+Return('group')
