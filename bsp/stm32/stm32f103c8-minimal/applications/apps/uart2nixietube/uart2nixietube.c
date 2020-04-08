@@ -26,6 +26,16 @@ static rt_device_t            uart2_serial;
 static struct rt_messagequeue uart1_rx_mq;
 static struct rt_messagequeue uart2_rx_mq;
 
+
+void TM1640_reset()
+{
+    TM1640_display(0, 20);
+    TM1640_display(1, 20);
+    TM1640_display(2, 20);
+    TM1640_display(3, 20);
+    TM1640_display(4, 20);
+}
+
 void display_number(char *buff, rt_uint32_t size)
 {
     rt_int32_t n  = 0;
@@ -33,18 +43,53 @@ void display_number(char *buff, rt_uint32_t size)
 
     if (buff && size >= 9 && (p = rt_strstr(buff, "TRACE[")) && (n = atol(p + 6)) > 0)
     {
-        if (n < 10)
+        if (n == 8888)
         {
-            TM1640_display(0, 20);
-            TM1640_display(1, 20);
-            TM1640_display(2, 20);
-            TM1640_display(3, 20);
+            TM1640_reset();
         }
-        if (n >= 10000) TM1640_display(0, (rt_uint8_t) (n % 100000 / 10000));
-        if (n >= 1000) TM1640_display(1, (rt_uint8_t) (n % 10000 / 1000));
-        if (n >= 100) TM1640_display(2, (rt_uint8_t) (n % 1000 / 100));
-        if (n >= 10) TM1640_display(3, (rt_uint8_t) (n % 100 / 10));
-        TM1640_display(4, (rt_uint8_t) (n % 10));
+        else
+        {
+            if (n >= 10000)
+            {
+                TM1640_display(0, (rt_uint8_t) (n % 100000 / 10000));
+                TM1640_display(1, (rt_uint8_t) (n % 10000 / 1000));
+                TM1640_display(2, (rt_uint8_t) (n % 1000 / 100));
+                TM1640_display(3, (rt_uint8_t) (n % 100 / 10));
+                TM1640_display(4, (rt_uint8_t) (n % 10));
+            }
+            else if (n >= 1000)
+            {
+                TM1640_display(0, 20);
+                TM1640_display(1, (rt_uint8_t) (n % 10000 / 1000));
+                TM1640_display(2, (rt_uint8_t) (n % 1000 / 100));
+                TM1640_display(3, (rt_uint8_t) (n % 100 / 10));
+                TM1640_display(4, (rt_uint8_t) (n % 10));
+            }
+            else if (n >= 100)
+            {
+                TM1640_display(0, 20);
+                TM1640_display(1, 20);
+                TM1640_display(2, (rt_uint8_t) (n % 1000 / 100));
+                TM1640_display(3, (rt_uint8_t) (n % 100 / 10));
+                TM1640_display(4, (rt_uint8_t) (n % 10));
+            }
+            else if (n >= 10)
+            {
+                TM1640_display(0, 20);
+                TM1640_display(1, 20);
+                TM1640_display(2, 20);
+                TM1640_display(3, (rt_uint8_t) (n % 100 / 10));
+                TM1640_display(4, (rt_uint8_t) (n % 10));
+            }
+            else
+            {
+                TM1640_display(0, 20);
+                TM1640_display(1, 20);
+                TM1640_display(2, 20);
+                TM1640_display(3, 20);
+                TM1640_display(4, (rt_uint8_t) (n % 10));
+            }
+        }
     }
 }
 
@@ -207,15 +252,6 @@ static int uart2_init()
     }
 
     return RT_EOK;
-}
-
-void TM1640_reset()
-{
-    TM1640_display(0, 20);
-    TM1640_display(1, 20);
-    TM1640_display(2, 20);
-    TM1640_display(3, 20);
-    TM1640_display(4, 20);
 }
 
 int uart2nixietube(void)
