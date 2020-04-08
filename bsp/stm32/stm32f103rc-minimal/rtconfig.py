@@ -61,8 +61,7 @@ if PLATFORM == 'gcc':
     CXXFLAGS = CFLAGS 
     CFLAGS += ' -std=c99'
 
-    POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n'
-    POST_ACTION += OBJCPY + ' -O ihex $TARGET rtthread.hex\n' + SIZE + ' $TARGET \n'
+    POST_ACTION = OBJCPY + ' -O binary $TARGET rtthread.bin\n' + SIZE + ' $TARGET \n' + OBJCPY + ' -O ihex $TARGET rtthread.hex'
 
 elif PLATFORM == 'armcc':
     # toolchains
@@ -95,7 +94,7 @@ elif PLATFORM == 'armcc':
     CXXFLAGS = CFLAGS 
     CFLAGS += ' -std=c99'
 
-    POST_ACTION = 'fromelf --bin $TARGET --output rtthread.bin \nfromelf -z $TARGET'
+    POST_ACTION = 'fromelf --bin $TARGET --output rtthread.bin \nfromelf -z $TARGET \n'
 
 elif PLATFORM == 'iar':
     # toolchains
